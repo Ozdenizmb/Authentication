@@ -8,6 +8,8 @@ public record UserCreateDto(
         @NotNull
         String lastName,
         @NotNull
+        String email,
+        @NotNull
         String password,
         @NotNull
         int age,
