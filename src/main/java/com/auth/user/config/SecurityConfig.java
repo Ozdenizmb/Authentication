@@ -27,9 +27,11 @@ public class SecurityConfig {
     private static final String[] AUTH_WHITELIST = {
             "/v3/api-docs/**",
             "/swagger-ui/**",
+            //"/docs/swagger-ui/**",
+            "/docs/swagger-ui/index.html#/",
             "/swagger-ui.html",
-            "/api/auth/**",
-            "/api/test/**",
+            //"/api/auth/**",
+            //"/api/test/**",
     };
 
     @Bean
@@ -43,8 +45,9 @@ public class SecurityConfig {
                     registry.anyRequest().authenticated();
                 })
                 //.formLogin(AbstractHttpConfigurer::disable)
-                //.httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults())
+                //.formLogin(Customizer.withDefaults())
+                //.formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();
     }
 
