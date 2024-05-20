@@ -53,8 +53,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(UserUpdateDto userUpdateDto) {
-        return null;
+    public UserDto updateUser(String email, UserUpdateDto userUpdateDto) {
+        Optional<User> response = userRepository.findByEmail(email);
+
+        if(response.isEmpty()) {
+            throw UserException.withStatusAndMessage(HttpStatus.BAD_REQUEST, ErrorMessages.USER_NOT_FOUND);
+        }
+
+        User existUser = response.get();
+        BeanUtils.copyProperties(userUpdateDto, existUser);
+
+        return mapper.toDto(userRepository.save(existUser));
     }
 
     @Override

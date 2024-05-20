@@ -10,7 +10,7 @@ public interface UserService {
 
     UUID createUser(UserCreateDto userCreateDto);
     UserDto getUser(String email, String password);
-    UserDto updateUser(UserUpdateDto userUpdateDto);
+    UserDto updateUser(String email, UserUpdateDto userUpdateDto);
     Boolean deleteUser(String email);
 
 }

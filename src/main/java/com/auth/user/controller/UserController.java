@@ -29,11 +29,11 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserDto> updateUser(String email, UserUpdateDto userUpdateDto) {
-        return null;
+        return ResponseEntity.ok(userService.updateUser(email, userUpdateDto));
     }
 
     @Override
     public ResponseEntity<Boolean> deleteUser(String email) {
-        return null;
+        return ResponseEntity.ok(userService.deleteUser(email));
     }
 }
