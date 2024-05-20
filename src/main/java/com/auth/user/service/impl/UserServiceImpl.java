@@ -12,6 +12,7 @@ import com.auth.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -24,12 +25,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper mapper;
-
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UUID createUser(UserCreateDto userCreateDto) {
         User user = new User();
         BeanUtils.copyProperties(userCreateDto, user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return user.getId();
     }
@@ -40,7 +42,8 @@ public class UserServiceImpl implements UserService {
 
         if(response.isPresent()) {
             User user = response.get();
-            if(Objects.equals(user.getPassword(), password)) {
+
+            if(passwordEncoder.matches(password, user.getPassword())) {
                 return mapper.toDto(user);
             }
             else {
@@ -62,6 +65,7 @@ public class UserServiceImpl implements UserService {
 
         User existUser = response.get();
         BeanUtils.copyProperties(userUpdateDto, existUser);
+        existUser.setPassword(passwordEncoder.encode(existUser.getPassword()));
 
         return mapper.toDto(userRepository.save(existUser));
     }
