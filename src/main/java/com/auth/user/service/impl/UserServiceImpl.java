@@ -68,6 +68,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean deleteUser(String email) {
-        return null;
+        Optional<User> response = userRepository.findByEmail(email);
+
+        if(response.isEmpty()) {
+            throw UserException.withStatusAndMessage(HttpStatus.BAD_REQUEST, ErrorMessages.USER_NOT_FOUND);
+        }
+
+        User existUser = response.get();
+        userRepository.delete(existUser);
+
+        return true;
     }
 }
