@@ -24,7 +24,7 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserDto> login(String email, String password) {
-        return null;
+        return ResponseEntity.ok(userService.getUser(email, password));
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface UserService {
 
     UUID createUser(UserCreateDto userCreateDto);
-    UserDto getUser(String email);
+    UserDto getUser(String email, String password);
     UserDto updateUser(UserUpdateDto userUpdateDto);
     Boolean deleteUser(String email);
 
