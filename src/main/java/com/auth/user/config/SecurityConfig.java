@@ -1,11 +1,11 @@
 package com.auth.user.config;
 
-import com.auth.user.service.MyUserDetailsService;
+import com.auth.user.exception.AuthException;
+import com.auth.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -16,14 +16,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
 
     @Autowired
-    private MyUserDetailsService myUserDetailsService;
+    private AuthService authService;
 
     private static final String[] AUTH_WHITELIST = {
             "/v3/api-docs/**",
@@ -51,18 +50,18 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationEntryPoint unauthorizedEntryPoint() {
-        return new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED);
+        return new AuthException();
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return myUserDetailsService;
+        return authService;
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(myUserDetailsService);
+        provider.setUserDetailsService(authService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }

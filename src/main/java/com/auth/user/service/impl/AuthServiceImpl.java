@@ -4,7 +4,7 @@ import com.auth.user.exception.ErrorMessages;
 import com.auth.user.exception.UserException;
 import com.auth.user.model.User;
 import com.auth.user.repository.UserRepository;
-import com.auth.user.service.MyUserDetailsService;
+import com.auth.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class MyUserDetailsServiceImpl implements MyUserDetailsService {
+public class AuthServiceImpl implements AuthService {
 
     private final UserRepository repository;
 
