@@ -35,7 +35,7 @@ public interface UserApi {
             @ApiResponse(responseCode = "409", description = "Conflict", content = @Content(schema = @Schema(implementation = Error.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = Error.class)))
     })
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE, produces = {MediaType.APPLICATION_JSON_VALUE})
     ResponseEntity<UUID> signUp(@RequestBody @Valid UserCreateDto userCreateDto);
 
     @Operation(operationId = "loginUser", summary = "Login user.")
@@ -48,10 +48,10 @@ public interface UserApi {
             @ApiResponse(responseCode = "409", description = "Conflict", content = @Content(schema = @Schema(implementation = Error.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = Error.class)))
     })
-    @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<UserDto> login(@RequestParam String email, @RequestHeader(value = "password") String password);
 
-    @Operation(operationId = "updateUser", summary = "Update user.", security = @SecurityRequirement(name = "basicAuth"))
+    @Operation(operationId = "updateUser", summary = "Update user.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserDto.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = Error.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = Error.class))),
@@ -64,7 +64,7 @@ public interface UserApi {
     @PutMapping(value = "/update/{email}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<UserDto> updateUser(@PathVariable String email, @RequestBody @Valid UserUpdateDto userUpdateDto);
 
-    @Operation(operationId = "deleteUser", summary = "Delete user.", security = @SecurityRequirement(name = "basicAuth"))
+    @Operation(operationId = "deleteUser", summary = "Delete user.")
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "No Content"),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(implementation = Error.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = Error.class))),

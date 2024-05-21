@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -37,20 +36,17 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry ->{
                     registry.requestMatchers(AUTH_WHITELIST).permitAll();
-                    registry.requestMatchers("/api/v1/user", "/api/v1/user/get").permitAll();
+                    registry.requestMatchers("/api/v1/user/signup", "/api/v1/user/login").permitAll();
                     registry.requestMatchers("/api/v1/user/update", "/api/v1/user/delete").hasRole("USER");
                     registry.anyRequest().authenticated();
                 })
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(httpBasicConfigurer -> httpBasicConfigurer
+                        .authenticationEntryPoint(unauthorizedEntryPoint())
+                )
                 .exceptionHandling(exceptionHandlingConfigurer ->
                         exceptionHandlingConfigurer.authenticationEntryPoint(unauthorizedEntryPoint())
                 )
                 .build();
-    }
-
-    @Bean
-    public AuthenticationEntryPoint unauthorizedEntryPoint() {
-        return new AuthException();
     }
 
     @Bean
@@ -64,6 +60,11 @@ public class SecurityConfig {
         provider.setUserDetailsService(authService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
+    }
+
+    @Bean
+    public AuthenticationEntryPoint unauthorizedEntryPoint() {
+        return new AuthException();
     }
 
     @Bean
